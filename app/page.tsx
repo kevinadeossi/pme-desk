@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 const navigation = [
   { label: "Tableau de bord", icon: "⌂", href: "/", active: true },
   { label: "Clients", icon: "♙", href: "/clients", active: false },
-  { label: "Demandes", icon: "▤", href: "#", active: false },
+  { label: "Demandes", icon: "▤", href: "/demandes", active: false },
   { label: "Devis", icon: "▧", href: "#", active: false },
 ];
 
@@ -92,10 +92,11 @@ export default function Home() {
             </p>
 
             <nav className="space-y-1">
+              
               {navigation.map((item) => (
                 <Link
                   key={item.label}
-                  href="#"
+                  href={item.href}
                   className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition ${
                     item.active
                       ? "bg-blue-50 text-blue-700"
@@ -106,6 +107,7 @@ export default function Home() {
                   {item.label}
                 </Link>
               ))}
+
             </nav>
           </div>
 
