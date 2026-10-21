@@ -168,8 +168,6 @@ export async function POST(request: Request) {
   }
 }
 
-
-
 export async function PATCH(request: Request) {
   try {
     const json: unknown = await request.json();
@@ -365,6 +363,88 @@ export async function PATCH(request: Request) {
       {
         status: "error",
         message: "Impossible de modifier la demande.",
+      },
+      { status: 500 },
+    );
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const json: unknown = await request.json();
+
+    if (
+      typeof json !== "object" ||
+      json === null ||
+      Array.isArray(json)
+    ) {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: "Les données envoyées sont invalides.",
+        },
+        { status: 400 },
+      );
+    }
+
+    const body = json as Record<string, unknown>;
+
+    if (
+      typeof body.id !== "string" ||
+      body.id.trim().length === 0
+    ) {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: "L'identifiant de la demande est obligatoire.",
+        },
+        { status: 400 },
+      );
+    }
+
+    const demandeExistante = await prisma.demande.findUnique({
+      where: { id: body.id },
+      select: { id: true },
+    });
+
+    if (!demandeExistante) {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: "La demande est introuvable.",
+        },
+        { status: 404 },
+      );
+    }
+
+    await prisma.demande.delete({
+      where: { id: body.id },
+    });
+
+    return NextResponse.json({
+      status: "ok",
+      message: "La demande a été supprimée avec succès.",
+    });
+  } catch (error) {
+    if (error instanceof SyntaxError) {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: "Le JSON envoyé est invalide.",
+        },
+        { status: 400 },
+      );
+    }
+
+    console.error(
+      "Erreur lors de la suppression de la demande :",
+      error,
+    );
+
+    return NextResponse.json(
+      {
+        status: "error",
+        message: "Impossible de supprimer la demande.",
       },
       { status: 500 },
     );

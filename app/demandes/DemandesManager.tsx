@@ -69,6 +69,8 @@ export default function DemandesManager({
   const [chargement, setChargement] = useState(false);  
   const [statutsEnCours, setStatutsEnCours] = useState<string[]>([]);
   const [erreurStatut, setErreurStatut] = useState("");
+  const [suppressionsEnCours, setSuppressionsEnCours] = useState<string[]>([]);
+  const [erreurSuppression, setErreurSuppression] = useState("");
   const [demandeEnEdition, setDemandeEnEdition] = useState<Demande | null>(null);
   const [modificationEnCours, setModificationEnCours] = useState(false);
   const [erreurModification, setErreurModification] = useState("");
@@ -124,6 +126,56 @@ export default function DemandesManager({
       setStatutsEnCours((precedents) =>
         precedents.filter((id) => id !== demandeId),
       );
+    }
+  }
+  
+  async function supprimerDemande(demande: Demande) {
+    const confirmation = window.confirm(
+        `Voulez-vous vraiment supprimer la demande « ${demande.titre} » ? Cette action est irréversible.`,
+    );
+
+    if (!confirmation) return;
+
+    setErreurSuppression("");
+    setSuppressionsEnCours((precedentes) => [
+        ...precedentes,
+        demande.id,
+    ]);
+
+    try {
+        const response = await fetch("/api/demandes", {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            id: demande.id,
+        }),
+        });
+
+        const resultat = await response.json();
+
+        if (!response.ok) {
+        throw new Error(
+            resultat.message || "Impossible de supprimer la demande.",
+        );
+        }
+
+        setDemandes((precedentes) =>
+        precedentes.filter((element) => element.id !== demande.id),
+        );
+
+        router.refresh();
+    } catch (error) {
+        setErreurSuppression(
+        error instanceof Error
+            ? error.message
+            : "Une erreur est survenue lors de la suppression.",
+        );
+    } finally {
+        setSuppressionsEnCours((precedentes) =>
+        precedentes.filter((id) => id !== demande.id),
+        );
     }
   }
 
@@ -339,6 +391,14 @@ export default function DemandesManager({
           {erreurStatut}
         </p>
       )}
+      {erreurSuppression && (
+        <p
+            role="alert"
+            className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+        >
+            {erreurSuppression}
+        </p>
+      )}
       <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
         <label
           htmlFor="recherche-demandes"
@@ -444,14 +504,28 @@ export default function DemandesManager({
                     <td className="whitespace-nowrap px-5 py-4 text-slate-500">
                       {formaterDate(demande.createdAt)}
                     </td>
+    
                     <td className="whitespace-nowrap px-5 py-4">
-                        <button
+                        <div className="flex items-center gap-2">
+                            <button
                             type="button"
                             onClick={() => ouvrirModification(demande)}
                             className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-100"
-                        >
+                            >
                             Modifier
-                        </button>
+                            </button>
+
+                            <button
+                            type="button"
+                            onClick={() => supprimerDemande(demande)}
+                            disabled={suppressionsEnCours.includes(demande.id)}
+                            className="rounded-lg border border-red-200 px-3 py-2 text-xs font-semibold text-red-600 transition hover:bg-red-50 disabled:cursor-wait disabled:opacity-50"
+                            >
+                            {suppressionsEnCours.includes(demande.id)
+                                ? "Suppression..."
+                                : "Supprimer"}
+                            </button>
+                        </div>
                     </td>
                   </tr>
                 ))}
