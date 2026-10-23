@@ -1,8 +1,22 @@
+
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
+
+  --background: #1c2129;
+  --foreground: #e1e6ee;
+
+  --surface: #242b35;
+  --surface-muted: #2b3440;
+  --border: #394351;
+
+  --text-primary: #e1e6ee;
+  --text-secondary: #b0bac8;
+  --text-placeholder: #929eae;
+
+  --accent: #9bb7ff;
+  --accent-hover: #b4c8ff;
 }
 
 @theme inline {
@@ -12,15 +26,151 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+html,
 body {
+  min-height: 100%;
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  color-scheme: dark;
+}
+
+::selection {
+  background: #40577f;
+  color: #ffffff;
+}
+
+/* 
+/* Surfaces principales et priorité sur les utilitaires Tailwind */
+html body .bg-white {
+  background-color: var(--surface) !important;
+}
+
+html body .bg-slate-50 {
+  background-color: var(--background) !important;
+}
+
+html body .bg-slate-100 {
+  background-color: var(--surface-muted) !important;
+}
+
+/* Typographie */
+html body .text-slate-900,
+html body .text-slate-800 {
+  color: var(--text-primary) !important;
+}
+
+html body .text-slate-700 {
+  color: #cbd4e0 !important;
+}
+
+html body .text-slate-600,
+html body .text-slate-500 {
+  color: var(--text-secondary) !important;
+}
+
+html body .text-slate-400 {
+  color: var(--text-placeholder) !important;
+}
+
+/* Bordures */
+html body .border-slate-100,
+html body .border-slate-200 {
+  border-color: var(--border) !important;
+}
+
+/* Accent principal */
+.bg-blue-50 {
+  background-color: #2b374a !important;
+}
+
+.bg-blue-100 {
+  background-color: #34435b !important;
+}
+
+.text-blue-600,
+.text-blue-700 {
+  color: var(--accent) !important;
+}
+
+/* États : couleurs atténuées */
+.bg-amber-50 {
+  background-color: #3d3529 !important;
+}
+
+.text-amber-700 {
+  color: #e3c58d !important;
+}
+
+.bg-emerald-50 {
+  background-color: #293b35 !important;
+}
+
+.text-emerald-700 {
+  color: #a5d6bd !important;
+}
+
+.bg-violet-50 {
+  background-color: #362f46 !important;
+}
+
+.text-violet-700 {
+  color: #c9b7f0 !important;
+}
+
+/* Formulaires et recherche */
+input,
+textarea,
+select {
+  background-color: var(--surface-muted);
+  color: var(--text-primary);
+  border-color: #465263;
+  caret-color: var(--accent);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-placeholder);
+  opacity: 1;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline-color: var(--accent);
+}
+
+input:disabled,
+textarea:disabled,
+select:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Navigation au survol */
+.hover\:bg-slate-50:hover {
+  background-color: var(--surface-muted) !important;
+}
+
+.hover\:text-slate-900:hover {
+  color: #ffffff !important;
+}
+
+/* Ombres discrètes */
+.shadow-sm {
+  --tw-shadow-color: rgb(0 0 0 / 18%);
+}
+
+/* Accessibilité : mouvements réduits */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
