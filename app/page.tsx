@@ -270,39 +270,70 @@ export default function Home() {
             </div>
           </Link>
 
+          
           <div className="mt-10">
-            <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
+            <p className="mb-4 px-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">
               Espace de travail
             </p>
 
-            <nav className="space-y-1">
-              
+            <nav className="space-y-1.5">
               {navigation.map((item) => (
                 <Link
                   key={item.label}
                   href={item.href}
-                  className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition ${
+                  aria-current={item.active ? "page" : undefined}
+                  className={`group flex items-center gap-3 rounded-xl border px-3 py-3 text-sm font-medium transition-colors duration-200 ${
                     item.active
-                      ? "bg-blue-50 text-blue-700"
-                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                      ? "border-blue-400/20 bg-blue-500/10 text-blue-300"
+                      : "border-transparent text-slate-400 hover:border-slate-700 hover:bg-slate-800/60 hover:text-slate-100"
                   }`}
                 >
-                  <span className="text-lg">{item.icon}</span>
-                  {item.label}
+                  <span
+                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-lg transition-colors ${
+                      item.active
+                        ? "bg-blue-500/15 text-blue-300"
+                        : "text-slate-400 group-hover:text-slate-100"
+                    }`}
+                  >
+                    {item.icon}
+                  </span>
+
+                  <span className="truncate">{item.label}</span>
+
+                  {item.active && (
+                    <span className="ml-auto h-1.5 w-1.5 shrink-0 rounded-full bg-blue-300" />
+                  )}
                 </Link>
               ))}
-
             </nav>
           </div>
+   
+          <div className="mt-auto border-t border-slate-700/70 pt-5">
+            <div className="rounded-2xl border border-slate-700/70 bg-slate-800/50 p-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500/10 text-sm font-bold text-blue-300 ring-1 ring-blue-400/20">
+                  P
+                </div>
 
-          <div className="mt-auto rounded-2xl bg-slate-50 p-4">
-            <p className="text-sm font-semibold">PME Desk</p>
-            <p className="mt-1 text-xs leading-5 text-slate-500">
-              Votre activité, mieux organisée.
-            </p>
-            <span className="mt-3 inline-block rounded-full bg-white px-2.5 py-1 text-xs text-slate-500 ring-1 ring-slate-200">
-              Version 0.1.0
-            </span>
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-slate-100">
+                    PME Desk
+                  </p>
+                  <p className="mt-1 text-xs leading-5 text-slate-400">
+                    Votre activité, mieux organisée.
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-4 flex items-center justify-between border-t border-slate-700/70 pt-3">
+                <span className="text-xs text-slate-400">
+                  Version
+                </span>
+                <span className="rounded-md border border-slate-700 bg-slate-900/60 px-2 py-1 text-[11px] font-medium text-slate-300">
+                  0.1.0
+                </span>
+              </div>
+            </div>
           </div>
         </aside>
 
